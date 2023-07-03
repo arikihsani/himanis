@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Detail Forecasting Bahan</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.2.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header th:replace="fragments/fragment :: header"></header>
+<!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside th:replace="fragments/fragment :: sidebar"></aside>
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1 th:text="'Detail Forecasting Bahan untuk ' + ${item.name}"></h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Forecasting Bahan</li>
+        <li class="breadcrumb-item"> <a href="/forecasting/bahan/view-all">Daftar Forecasting Bahan</a></li>
+        <li class="breadcrumb-item active" th:text="'Detail Forecasting Bahan untuk ' + ${item.name}"></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" th:text="'Detail Forecasting Bahan untuk ' + ${item.name}"></h5>
+            <div class="profile">
+              <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">ID Item</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${item.id}"></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Nama Item</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${item.name}"></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Kode Item</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${item.code}"></div>
+                </div>
+                
+          
+                <a><button type="button"
+                  data-bs-toggle="modal" data-bs-target="#verticalycentered2"
+                  class="btn btn-sm btn-outline-success"
+                  th:each="authority : ${#authentication.getAuthorities()}"
+                  th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'PPIC Staff'}">Tambah Bahan Processing</button></a>
+
+                <div class="modal fade" id="verticalycentered2" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Update Status</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form th:object="${bahanModel}" th:action="@{/forecasting/bahan/add/} + ${item.id}"
+                        method="POST">
+                      <div class="modal-body">
+                        <label for="inputText" class="col-4 col-form-label">Nama Group</label>
+                        <input type="text" name="nama_group" required/>
+                        <input type="hidden" th:field="*{quantity}" th:value=0/>
+                        <input type="hidden" th:field="*{item}" th:value = ${item.id} />
+                        <br>
+                        Pilih item yang ingin ditambahkan:
+                        
+                          <select class="form-control" name="referred_by">
+                            <option value="" disabled selected>--Pilih Item--</option>
+                            <option 
+                            th:each="item: ${listItem}"
+                            th:text="${item.name}"
+                            th:value="${item.id}"
+                            ></option>
+                          
+                          </select>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit"
+                           class="btn btn-primary"
+                           >Tambah</button>
+                      </div>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Vertically centered Modal -->
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </section>
+
+
+
+<!--  <h1>Tables</h1>-->
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Data Forecasting Bahan Processing</h5>
+
+            <!-- Table with stripped rows -->
+            <table class="table table-hover datatable">
+              <thead >
+              <tr>
+                <th scope="col">Group</th>
+                <th scope="col">Nama Barang</th>
+                <th scope="col">Stok</th>
+                <th scope="col">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="bahan, iterationStatus : ${listForecastingBahan}" >
+                <td th:text="${bahan.nama_group}"></td>
+                <td th:text="${listBahan[iterationStatus.count - 1].name}"></td>
+                <td th:if="${bahan.quantity} <= 100"><h5><span th:text="${bahan.quantity} + ' kg'" class="badge rounded-pill" style="background-color:#FF3E03;"></span></h5></td>
+                <td th:if="${bahan.quantity} <= 250 and ${bahan.quantity} > 100"><h5><span th:text="${bahan.quantity} + ' kg'" class="badge rounded-pill text-dark" style="background-color:#FF9800;"></span></h5></td>
+                <td th:if="${bahan.quantity} <= 500 and ${bahan.quantity} > 250"><h5><span th:text="${bahan.quantity}  + ' kg'" class="badge rounded-pill text-dark" style="background-color:#FFE81A;"></span></h5></td>
+                <td th:if="${bahan.quantity} > 500"><h5><span th:text="${bahan.quantity} + ' kg'" class="badge rounded-pill" style="background-color:#7CB43C;"></span></h5></td>
+                <td>
+                  <a th:href="@{/forecasting/bahan/delete/} + ${bahan.id} + '/' + ${item.id}"><button class="btn btn-danger">Delete</button></a>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer th:replace="fragments/fragment :: footer" th:remove="tag"></footer>
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<object th:include="fragments/fragment :: vendor_js" th:remove="tag"></object>
+
+</body>
+
+</html>

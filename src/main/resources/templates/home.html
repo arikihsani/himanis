@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.2.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:replace="fragments/fragment :: header"></header>
+
+  <!-- ======= Sidebar ======= -->
+  <aside th:replace="fragments/fragment :: sidebar"></aside>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <br>
+      <div class="row">
+        <div class="col-lg-8">
+        <div class="col-xxl-4 col-xl-12">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">Hello, Selamat Datang!</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div class="ps-3">
+                  <h5 th:text="${name}"></h5>
+                  <span class="badge bg-primary align-content-md-end" th:text="${role}"></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Pekerjaan Card -->
+          
+            <div class="col-xxl-4 col-md-6">
+              <a th:href="@{/processing/view-all}">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Pekerjaan Pesanan</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-folder2-open"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 th:text="${processing}"></h6>
+                      <span class="text-muted small pt-2 ps-1">pesanan</span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </a>
+            </div><!-- End Pekerjaan Card -->
+
+            <!-- Penyelesaian Card -->
+            
+              
+            
+            <div class="col-xxl-4 col-md-6">
+              <a th:href="@{/finishing/view-all}">
+              <div class="card info-card revenue-card">
+                <div class="card-body">
+                  <h5 class="card-title">Penyelesaian Pesanan</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-folder-check"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 th:text="${finishing}"></h6>
+                      <span class="text-muted small pt-2 ps-1">pesanan</span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </a>
+            </div><!-- End Penyelesaian Card -->
+
+            
+              <!-- Approval Request Card -->
+              
+                <div class="col-xxl-4 col-md-6">
+                  <a th:href="@{@{/processing/approval}}">
+                  <span th:if="${role == 'Admin' or role == 'Supervisor' or role == 'Processing Staff'}">
+  
+                  
+                <div class="card info-card sales-card">
+                  <div class="card-body">
+                    <h5 class="card-title">Approval Request</h5>
+  
+                    <div class="d-flex align-items-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-calendar-check"></i>
+                      </div>
+                      <div class="ps-3">
+                        <h6 th:text="${approval}"></h6>
+                        <span class="text-muted small pt-2 ps-1">request</span>
+  
+                      </div>
+                    </div>
+                  </div>
+  
+                  </div>
+                </span>
+              </a>
+                </div><!-- End Approval Request Card -->
+              
+              
+
+            <h5>Menu</h5>
+            <br>
+
+            <!-- Menu Item Card -->
+            <div class="col-6 col-sm-4" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}">
+              <div class="card info-card" style="height: 200px;">
+                <div class="card-body">
+                  <h5 class="card-title"></h5>
+                  <div class="justify-content-center center" style="text-align: center;">
+                    <center>
+                      <div class="card-icon">
+                        <i class="bi bi-folder2-open"></i>
+                      </div>
+                    </center>
+                    <a th:href="@{/processing/view-all}">
+                      <span>Daftar Pekerjaan Pesanan</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}">
+              <div class="card info-card" style="height: 200px;">
+                <div class="card-body">
+                  <h5 class="card-title"></h5>
+                  <div class="justify-content-center center" style="text-align: center;">
+                    <center>
+                      <div class="card-icon">
+                        <i class="bi bi-folder-check"></i>
+                      </div>
+                    </center>
+                    <a th:href="@{/finishing/view-all}">
+                      <span>Daftar Penyelesaian Pesanan</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}">
+              <div class="card info-card" style="height: 200px;">
+                <div class="card-body">
+                  <h5 class="card-title"></h5>
+                  <div class="justify-content-center center" style="text-align: center;">
+                    <center>
+                      <div class="card-icon">
+                        <i class="bi bi-calendar-check"></i>
+                      </div>
+                    </center>
+                    <a th:href="@{@{/processing/approval}}">
+                      <span>Approval Request</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'PPIC Staff'}">
+              <div class="card info-card" style="height: 200px;">
+                <div class="card-body">
+                  <h5 class="card-title"></h5>
+                  <div class="justify-content-center center" style="text-align: center;">
+                    <center>
+                      <div class="card-icon">
+                        <i class="bi bi-clipboard-data"></i>
+                      </div>
+                    </center>
+                    <a th:href="@{/}">
+                      <span>Summary Overstock & Understock</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'PPIC Staff'}">
+              <div class="card info-card" style="height: 200px;">
+                <div class="card-body">
+                  <h5 class="card-title"></h5>
+                  <div class="justify-content-center center" style="text-align: center;">
+                    <center>
+                      <div class="card-icon">
+                        <i class="bi bi-basket3"></i>
+                      </div>
+                    </center>
+                    <a th:href="@{/}">
+                      <span>Ketersediaan Bahan Processing</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+      </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer th:replace="fragments/fragment :: footer" th:remove="tag"></footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <object th:include="fragments/fragment :: vendor_js" th:remove="tag"></object>
+
+</body>
+
+</html>

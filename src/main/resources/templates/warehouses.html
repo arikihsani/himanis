@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Pilih Warehouse | HIMANIS</title>
+    <script>
+        var noRedirect = true;
+    </script>
+
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+
+<!-- ======= Header ======= -->
+<header th:replace="fragments/fragment :: header"></header>
+
+<!-- ======= Sidebar ======= -->
+<aside th:replace="fragments/fragment :: sidebar"></aside>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Pilih Warehouse</h1>
+    </div><!-- End Page Title -->
+
+    <div class="container p-4">
+        <div class="card p-4 shadow">
+            <div class="d-flex justify-content-center flex-wrap">
+                <div th:each="warehouse: ${warehouses}" style="cursor: pointer;" class="w-25 h-25 m-2">
+                    <a th:attr="onclick=|setWarehouse('${warehouse.id}', '${warehouse.name}')|">
+                        <div class="card text-center shadow">
+                            <img class="img-fluid" th:src="@{/images/hijrahfood-logo.jpeg}" alt="">
+                            <div class="card-body" th:text="${warehouse.name}"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer th:replace="fragments/fragment :: footer" th:remove="tag"></footer>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<object th:include="fragments/fragment :: vendor_js" th:remove="tag"></object>
+
+<script>
+    function setWarehouse(id, name) {
+        localStorage.setItem("warehouse_id", id)
+        localStorage.setItem("warehouse_name", name)
+        window.location = "/?warehouseId=" + id;
+    }
+</script>
+</body>
+</html>

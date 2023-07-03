@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <head th:fragment="css">
+    <!-- Favicons -->
+    <link th:href="@{/images/logo-hijrahfood.png}" rel="icon">
+    <link th:href="@{/images/logo-hijrahfood.png}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" integrity="sha512-0p3K0H3S6Q4bEWZ/WmC94Tgit2ular2/n0ESdfEX8l172YyQj8re1Wu9s/HT9T/T2osUw5Gx/6pAZNk3UKbESw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/quill/quill.snow.css}" rel="stylesheet">
+    <link th:href="@{/vendor/quill/quill.bubble.css}" rel="stylesheet">
+    <link th:href="@{/vendor/remixicon/remixicon.css}" rel="stylesheet">
+    <link th:href="@{/vendor/simple-datatables/style.css}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+  </head>
+
+  <head th:fragment="js">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            crossorigin="anonymous">
+    </script>
+    <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      try {
+        if (!noRedirect && !localStorage.getItem("warehouse_id")) {
+          window.location = "/warehouses"
+        }
+      } catch (e) {
+        if (!localStorage.getItem("warehouse_id")) {
+          window.location = "/warehouses"
+        }
+      }
+      (function($) {
+        $(document).ready(function(){
+          $("#warehouse-info").text(`Warehouse: ${localStorage.getItem("warehouse_name") ? localStorage.getItem("warehouse_name") : "-"}`)
+        });
+      })(jQuery);
+
+      function updateDatabase() {
+        new Noty({
+          text: 'Melakukan sinkronisasi...',
+          animation: {
+            open: 'animated bounceInRight', // Animate.css class names
+            close: 'animated bounceOutRight' // Animate.css class names
+          }
+        }).show();
+
+        fetch("/api/v1/listItem" )
+                .then((resp) => resp.json())
+                .then(function (data) {
+                  new Noty({
+                    text: 'Sinkronisasi berhasil!',
+                    type: 'success',
+                    animation: {
+                      open: 'animated bounceInRight', // Animate.css class names
+                      close: 'animated bounceOutRight' // Animate.css class names
+                    }
+                  }).show();
+                });
+      }
+    </script>
+  </head>
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.2.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header th:fragment="header" id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="/" class="logo d-flex align-items-center">
+      <img th:src="@{/images/logo-hijrahfood.png}" alt="">
+      <span class="d-none d-lg-block" style="color: #717ff5;">HIMAN</span>
+      <span class="d-none d-lg-block">IS</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn sidebar-toggle" data-toggle="push-menu" role="button"></i>
+  </div><!-- End Logo -->
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+      <li class="nav-item dropdown pe-3">
+
+        <div class="nav-link nav-profile d-flex align-items-center pe-0">
+<!--          <i class="bi bi-person-circle"></i>-->
+<!--          <span sec:authentication="name" class="d-none d-md-block"></span>-->
+          <button id="refresh" class="btn btn-primary" onclick="updateDatabase()">Sync Warehouse</button>
+          <a class="d-flex align-items-center px-3 mx-3 btn btn-outline-secondary btn btn-outline-dark" role="button" th:href="@{/warehouses}" id="warehouse-info"></a>
+        </div><!-- End Profile Image Icon -->
+
+    </ul>
+  </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside th:fragment="sidebar" id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav sidebar-menu" id="sidebar-nav" data-widget="tree">
+
+    <li class="nav-item" th:classappend="${#request.getServletPath() == '/' ? 'nav-link' : 'nav-link collapsed'}">
+      <a href="/">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item" th:classappend="${#request.getServletPath() == '/warehouses' ? 'nav-link' : 'nav-link collapsed'}">
+      <a class="nav-item" th:href="@{/warehouses}">
+        <i class="bi bi-server"></i>
+        <span>Warehouse</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item" th:classappend="${#request.getServletPath() == '/user/changePassword' ? 'nav-link' : 'nav-link collapsed'}">
+      <a th:href="@{/user/changePassword}">
+        <i class="bi bi-shield-lock"></i><span>Ubah Password</span>
+      </a>
+    </li><!-- End Nav Item-->
+
+    <li class="nav-item" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}">
+      <a data-bs-target="#account-nav" class="nav-link collapsed" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-person-video2"></i><span style="color:#4154f1;">Kelola Akun</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="account-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin'}">
+          <a th:href="@{/user/create}">
+            <i class="bi bi-circle"></i><span>Tambah Akun Baru</span>
+          </a>
+        </li>
+        <li th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}">
+          <a th:href="@{/user/viewall}">
+            <i class="bi bi-circle"></i><span>Daftar Akun</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Nav Item-->
+
+    <li class="nav-item" th:classappend="${#request.getServletPath() == '/processing/view-all' ? 'nav-link' : 'nav-link collapsed'}" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}">
+      <a th:href="@{/processing/view-all}">
+        <i class="bi bi-folder2-open"></i><span>Daftar Pekerjaan Pesanan</span>
+      </a>
+    </li><!-- End Nav Item-->
+
+    <li class="nav-item" th:classappend="${#request.getServletPath() == '/finishing/view-all' ? 'nav-link' : 'nav-link collapsed'}" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}">
+      <a th:href="@{/finishing/view-all}">
+        <i class="bi bi-folder-check"></i><span>Daftar Penyelesaian Pesanan</span>
+      </a>
+    </li><!-- End Nav Item-->
+
+    <li class="nav-item" th:classappend="${#request.getServletPath() == '/processing/approval' ? 'nav-link' : 'nav-link collapsed'}" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}">
+      <a th:href="@{/processing/approval}">
+        <i class="bi bi-folder-check"></i><span>Daftar Approval Request</span>
+      </a>
+    </li><!-- End Nav Item-->
+
+    <li class="nav-item" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'PPIC Staff'}">
+      <a class="nav-link collapsed" data-bs-target="#forecasting-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-box-seam"></i><span style="color:#4154f1;">Forecasting Stock</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forecasting-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a th:href="@{/forecasting/bahan/view-all}">
+            <i class="bi bi-circle"></i><span>Forecasting Bahan Processing</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/forecasting/produk-akhir}">
+            <i class="bi bi-circle"></i><span>Forecasting Stok Produk Akhir</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Nav Item-->
+
+    <li class="nav-item" href="logout">
+      <a class="nav-link collapsed" data-bs-target="#logout-nav" th:href="@{/logout}">
+        <i class="bi bi-box-arrow-right"></i><span style="color:#4154f1;">Keluar</span>
+      </a>
+    </li><!-- End Nav Item-->
+
+<!--    Design System-->
+<!--    </li>&lt;!&ndash; End Nav Item&ndash;&gt;-->
+
+<!--    <li class="nav-item" href="/design-system">-->
+<!--      <a class="nav-link collapsed" data-bs-target="#design-nav" href="/design-system">-->
+<!--        <i class="bi bi-box-arrow-right"></i><span>Design System</span>-->
+<!--      </a>-->
+<!--    </li>&lt;!&ndash; End Nav Item&ndash;&gt;-->
+
+  </ul>
+
+</aside><!-- End Sidebar-->
+
+
+<!-- ======= Footer ======= -->
+<footer th:fragment="footer" id="footer" class="footer">
+  <div class="copyright">
+    2022 &copy; Copyright <strong><span>HIMANIS</span></strong>. All Rights Reserved
+  </div>
+  <div class="credits">
+    <!-- All the links in the footer should remain intact. -->
+    <!-- You can delete the links only if you purchased the pro version. -->
+    <!-- Licensing information: https://bootstrapmade.com/license/ -->
+    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+  </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<div th:fragment="vendor_js">
+  <script th:src="@{/vendor/apexcharts/apexcharts.min.js}"></script>
+  <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/vendor/chart.js/chart.min.js}"></script>
+  <script th:src="@{/vendor/echarts/echarts.min.js}"></script>
+  <script th:src="@{/vendor/quill/quill.min.js}"></script>
+  <script th:src="@{/vendor/simple-datatables/simple-datatables.js}"></script>
+  <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
+  <script th:src="@{/vendor/php-email-form/validate.js}"></script>
+
+  <!-- Template Main JS File -->
+  <script th:src="@{/js/main.js}"></script>
+</div>
+
+</body>
+
+</html>

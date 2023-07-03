@@ -1,0 +1,38 @@
+stages:
+  - build
+  - deploy
+
+gradle-build:
+  image: gradle:jdk11
+  stage: build
+  script:
+    - chmod +x gradlew
+    - ./gradlew clean build -x test
+
+deploy-heroku-staging:
+  stage: deploy
+  image: ruby:2.6
+  before_script:
+    - gem install dpl --version 1.10.15
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME_STAGING --api-key=$HEROKU_API_KEY
+  environment:
+    name: staging
+    url: $HEROKU_APP_HOST_STAGING
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "staging"'
+
+deploy-heroku-main:
+  stage: deploy
+  image: ruby:2.6
+  before_script:
+    - gem install dpl --version 1.10.15
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME_MAIN --api-key=$HEROKU_API_KEY
+  environment:
+    name: production
+    url: $HEROKU_APP_HOST_MAIN
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "main"'

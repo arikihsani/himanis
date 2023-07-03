@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Detail Approval Pekerjaan Pesanan</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.2.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header th:replace="fragments/fragment :: header"></header>
+<!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside th:replace="fragments/fragment :: sidebar"></aside>
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1 th:text="'Detail Approval Pekerjaan Pesanan #' + ${processingNumber}"></h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"> <a href="/processing/approval">Daftar Approval Request</a></li>
+        <li class="breadcrumb-item active" th:text="'Detail Approval Pekerjaan Pesanan #' + ${processingNumber}"></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" th:text="'Detail Approval Pekerjaan Pesanan #' + ${processingNumber}"></h5>
+            <div class="profile">
+              <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Nomor Pekerjaan Pesanan</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${processingNumber}"></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Tanggal Pembuatan</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${processing.dateCreated}"></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Pembuat</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${processing.assignee}"></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Item Hasil</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${processing.outputTarget}"></div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Keterangan</div>
+                  <div class="col-lg-9 col-md-8" th:text="': '+${processing.description}"></div>
+                </div>
+
+                <a th:href="@{/processing/update-approval/} + ${id}" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}" class="btn btn-sm btn-outline-warning">Update</a>
+                <a><button type="button"
+                   data-bs-toggle="modal" data-bs-target="#verticalycentered"
+                   class="btn btn-sm btn-outline-danger"
+                   th:each="authority : ${#authentication.getAuthorities()}"
+                   th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}">Reject</button></a>
+
+                <div class="modal fade" id="verticalycentered" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Tolak Approval Pekerjaan Pesanan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Apa anda yakin ingin menolak approval pekerjaan pesanan ini?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        <a th:href="@{/processing/delete-approval/} + ${id}"><button type="button"
+                           class="btn btn-danger"
+                           >Reject</button></a>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- End Vertically centered Modal-->
+                <a><button type="button"
+                  data-bs-toggle="modal" data-bs-target="#verticalycentered2"
+                  class="btn btn-sm btn-outline-primary"
+                  th:each="authority : ${#authentication.getAuthorities()}"
+                  th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}">Approve</button></a>
+
+               <div class="modal fade" id="verticalycentered2" tabindex="-1">
+                 <div class="modal-dialog modal-dialog-centered">
+                   <div class="modal-content">
+                     <div class="modal-header">
+                       <h5 class="modal-title">Persetujuan Pekerjaan Pesanan</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                     </div>
+                     <div class="modal-body">
+                       Apa anda yakin ingin menyetujui pekerjaan pesanan ini?
+                     </div>
+                     <div class="modal-footer">
+                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                       <a th:href="@{/processing/approved/} + ${id}"><button type="button"
+                          class="btn btn-primary"
+                          >Approve</button></a>
+                     </div>
+                   </div>
+                 </div>
+               </div><!-- End Vertically centered Modal-->
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </section>
+
+
+
+<!--  <h1>Tables</h1>-->
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Data Bahan Pekerjaan Pesanan</h5>
+
+            <!-- Table with stripped rows -->
+            <table class="table table-hover datatable">
+              <thead >
+              <tr>
+                <th scope="col">Nama Barang</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Kuantitas</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Total</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="bahan, iterationStatus : ${listBahanPekerjaanPesanan}" >
+                <td th:text="${bahan.item.name}"></td>
+                <td th:text="${bahan.item.code}"></td>
+                <td th:text="${#numbers.formatDecimal(bahan.quantity, 1, 'POINT', 2, 'COMMA')}"></td>
+                <td th:text="${bahan.item.unit}"></td>
+                <td th:text="${#numbers.formatDecimal(listTotalCost[iterationStatus.index], 3, 'POINT', 2, 'COMMA')}"></td>
+              </tr>
+
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer th:replace="fragments/fragment :: footer" th:remove="tag"></footer>
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<object th:include="fragments/fragment :: vendor_js" th:remove="tag"></object>
+
+</body>
+
+</html>

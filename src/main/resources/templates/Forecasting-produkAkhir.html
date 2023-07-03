@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Forecasting Ketersediaan Produk Akhir</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <head th:fragment="css">
+        <!-- Favicons -->
+        <link th:href="@{/images/favicon.png}" rel="icon">
+        <link th:href="@{/images/apple-touch-icon.png}" rel="apple-touch-icon">
+
+        <head th:fragment="css">
+
+            <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+            <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+
+        </head>
+<body>
+<header th:replace="fragments/fragment :: header"></header>
+
+<!-- ======= Sidebar ======= -->
+<aside th:replace="fragments/fragment :: sidebar"></aside>
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Forecasting Ketersediaan Stok Produk Akhir</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item">Forecasting Ketersediaan Stok Produk Akhir</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="alert" th:if=${success}>
+                    <div th:text="${success}" class="alert alert-success" onclick="this.parentElement.style.display='none';"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#largeModal" style="margin-top: 30px">
+                            <i class="bi bi-calendar4-week"></i>
+                            Pilih Jumlah Bulan Penjualan
+                        </button>
+
+                        <form th:action="@{/forecasting/produk-akhir}" method="POST" name="myForm" onsubmit="return validateForm()">
+                            <div class="modal fade" id="largeModal" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Pilih Jumlah Total Bulan Penjualan</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <select class="col-sm-5 form-control" name="months">
+                                                <option th:text="'1 Bulan'" th:value=1 name="months"></option>
+                                                <option th:text="'2 Bulan'" th:value=2 name="months"></option>
+                                                <option th:text="'3 Bulan'" th:value=3 name="months"></option>
+                                                <option th:text="'4 Bulan'" th:value=4 name="months"></option>
+                                                <option th:text="'5 Bulan'" th:value=5 name="months"></option>
+                                                <option th:text="'6 Bulan'" th:value=6 name="months"></option>
+                                                <option th:text="'7 Bulan'" th:value=7 name="months"></option>
+                                                <option th:text="'8 Bulan'" th:value=8 name="months"></option>
+                                                <option th:text="'9 Bulan'" th:value=9 name="months"></option>
+                                                <option th:text="'10 Bulan'" th:value=10 name="months"></option>
+                                                <option th:text="'11 Bulan'" th:value=11 name="months"></option>
+                                                <option th:text="'12 Bulan'" th:value=12 name="months"></option>
+                                            </select>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <h5 class="card-title" th:text="'Menampilkan data berdasarkan rata-rata total penjualan selama ' + ${months} + ' bulan dari tanggal saat ini'"></h5>
+
+                        <!-- Table with stripped rows -->
+                        <table class="table datatable" id="tab-forecast">
+                            <thead>
+                            <tr>
+                                <th scope="col">SKU</th>
+                                <th scope="col">Nama Produk</th>
+                                <th scope="col">Total Stock</th>
+                                <th scope="col">Rata - Rata Penjualan<br>Produk per Bulan </th>
+                                <th scope="col">Perkiraan<br>Ketersediaan Produk</th>
+                                <th scope="col">Remarks</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item, iterationStatus : ${listForecastingProduct}">
+                                <td th:text="${item.code}"></td>
+                                <td th:text="${item.name}"></td>
+<!--                                <td th:text="${item.qty} + ' Kg'"></td>-->
+                                <td th:text="${#numbers.formatDecimal(item.qty,  1, 'POINT', 2, 'COMMA')} + ' ' + ${listUnit[iterationStatus.index]}"></td>
+                                <td th:if="${listUnit[iterationStatus.index] == null}" th:text="${#numbers.formatDecimal(item.qty,  1, 'POINT', 2, 'COMMA')} + ' --'}"></td>
+<!--                                <td th:text="${item.avgQty}+ ' Kg'"></td>-->
+                                <td th:text="${#numbers.formatDecimal(item.avgQty,  1, 'POINT', 2, 'COMMA')}+ ' ' + ${listUnit[iterationStatus.index]}"></td>
+                                <td th:if="${listUnit[iterationStatus.index] == null}" th:text="${#numbers.formatDecimal(item.avgQty,  1, 'POINT', 2, 'COMMA')}+ ' --'}"></td>
+                                <td th:if="${item.scale} <= 0.5"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill" style="background-color:#FF3E03;"></span></h5></td>
+                                <td th:if="${item.scale} <= 0.75 and ${item.scale} > 0.5"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill text-dark" style="background-color:#FF9800;"></span></h5></td>
+                                <td th:if="${item.scale} <= 1 and ${item.scale} > 0.75"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill text-dark" style="background-color:#FFC107;"></span></h5></td>
+                                <td th:if="${item.scale} <= 1.5 and ${item.scale} > 1"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill text-dark" style="background-color:#FFE81A;"></span></h5></td>
+                                <td th:if="${item.scale} <= 2.5 and ${item.scale} > 1.5"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill text-dark" style="background-color:#BFD025;"></span></h5></td>
+                                <td th:if="${item.scale} <= 4 and ${item.scale} > 2.5"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill" style="background-color:#7CB43C;"></span></h5></td>
+                                <td th:if="${item.scale} > 4"><h5><span th:text="${#numbers.formatDecimal(item.scale, 1, 'DEFAULT', 2, 'DEFAULT')} + ' bulan'" class="badge rounded-pill" style="background-color:#449A47;"></span></h5></td>
+                                <td th:text="${item.remarks}"></td>
+                                <td><a th:href="@{/forecasting/detail/(id=${item.id})}" class="btn btn-sm btn-outline-primary">Detail</a></td>
+                            </tr>
+<!--                                <tr th:each="item, iterationStatus : ${temp}">-->
+<!--                                    <td th:text="${item.code}"></td>-->
+<!--                                    <td th:text="${item.name}"></td>-->
+<!--                                    <td th:text="${item.qty} + ' Kg'"></td>-->
+<!--                                    <td th:text="${item.avgQty}"></td>-->
+<!--                                    <td th:text="${item.scale} + ' bulan'"></td>-->
+<!--                                    <td th:text="${item.remarks}"></td>-->
+<!--                                    <td><a th:href="@{/forecasting/detail/(id=${item.id})}" class="btn btn-sm btn-outline-primary">Detail</a></td>-->
+<!--                                </tr>-->
+
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ======= Footer ======= -->
+<footer th:replace="fragments/fragment :: footer" th:remove="tag"></footer>
+<!-- End Footer -->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<object th:include="fragments/fragment :: vendor_js" th:remove="tag"></object>
+
+</body>
+</html>

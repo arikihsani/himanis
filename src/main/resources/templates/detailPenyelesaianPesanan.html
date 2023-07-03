@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Detail Penyelesaian Pesanan</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.2.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:replace="fragments/fragment :: header"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside th:replace="fragments/fragment :: sidebar"></aside>
+  <!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1 th:text="'Detail Penyelesaian Pesanan #' + ${finishing.finishingNumber}"></h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item">Penyelesaian Pesanan</li>
+          <li class="breadcrumb-item"> <a href="/finishing/view-all">Daftar Penyelesaian Pesanan</a></li>
+          <li class="breadcrumb-item active" th:text="'Detail Penyelesaian Pesanan #' + ${finishing.finishingNumber}"></li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" th:text="'Detail Penyelesaian Pesanan #' + ${finishing.finishingNumber}"></h5>
+              <div class="profile">
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Nomor Penyelesaian Pesanan</div>
+                    <div class="col-lg-9 col-md-8" th:text="': '+${finishing.finishingNumber}"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Nomor Pekerjaan Pesanan</div>
+                    <div class="col-lg-9 col-md-8" >
+                      <a th:href="@{/processing/detail/(id=${processing.id})}"><span th:text="': '+${finishing.processing.processingNumber}"></span></a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Tanggal Pembuatan</div>
+                    <div class="col-lg-9 col-md-8" th:text="': '+${finishing.dateCreated}"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Pembuat</div>
+                    <div class="col-lg-9 col-md-8" th:text="': '+${finishing.assignee}"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Keterangan</div>
+                    <div class="col-lg-9 col-md-8" th:text="': '+${finishing.description}"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Status Pekerjaan Pesanan</div>
+                    <div class = "col-lg-9 col-md-8" th:switch="${finishing.processing.status}">:
+                      <div class="badge rounded-pill bg-danger" th:case=0 >Belum Dikerjakan</div>
+                      <div class="badge rounded-pill bg-warning text-dark" th:case=1>Sedang Dikerjakan</div>
+                      <div class="badge rounded-pill bg-info text-dark" th:case=2>Selesai Sebagian</div>
+                      <div class="badge rounded-pill bg-success" th:case=3>Selesai</div>
+                    </div>
+                  </div>
+
+                  <a th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}" th:href="@{/finishing/update/} + ${finishing.id}" class="btn btn-sm btn-outline-warning">Update</a>
+
+                  <a><button type="button"
+                             data-bs-toggle="modal" data-bs-target="#verticalycentered"
+                             class="btn btn-sm btn-outline-danger"
+                             th:each="authority : ${#authentication.getAuthorities()}"
+                             th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor'}">Delete</button></a>
+
+                  <div class="modal fade" id="verticalycentered" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Hapus Penyelesaian Pesanan</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Apa anda yakin ingin menghapus penyelesaian pesanan ini?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                          <a th:href="@{/finishing/delete/} + ${id}">
+                            <button type="button"
+                                    class="btn btn-danger">
+                              Delete
+                            </button></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!-- End Vertically centered Modal-->
+                  <a th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}" th:href="@{/finishing/export/pdf/} + ${finishing.id}" class="btn btn-sm btn-outline-primary">Export PDF</a>
+                  <a th:href="@{/finishing/export/excel/(id=${id})}" th:each="authority : ${#authentication.getAuthorities()}" th:if="${authority.getAuthority() == 'Admin' or authority.getAuthority() == 'Supervisor' or authority.getAuthority() == 'Processing Staff'}" class="btn btn-sm btn-outline-primary">Export XLS</a>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Table Section -->
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Data Hasil Penyelesaian Pesanan</h5>
+            <!-- Table with stripped rows -->
+            <table class="table table-hover datatable">
+              <thead>
+              <tr class="text-center">
+                <th scope="col">Nama Barang</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Kuantitas</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Porsi [%]</th>
+                <th scope="col">Total Harga</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr th:each="hasil, iterationStatus : ${listHasilPenyelesaianPesanan}" >
+                  <td th:text="${hasil.item.name}"></td>
+                  <td th:text="${hasil.item.code}"></td>
+                  <td th:text="${#numbers.formatDecimal(hasil.quantity, 1, 'POINT', 2, 'COMMA')}"></td>
+                  <td th:text="${hasil.item.unit}"></td>
+                  <td th:text="${#numbers.formatDecimal(hasil.percentage, 0, 1)}"></td>
+                  <td th:text="${#numbers.formatDecimal(listTotalCost[iterationStatus.index], 3, 'POINT', 2, 'COMMA')}"></td>
+<!--                  <td th:text="${hasil.quantity} * ${hasil.percentage} * ${static_price}"></td>-->
+                </tr>
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- End of Table Section -->
+
+    <section class="section" th:if="${!finishing.logs.empty}">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Log Perubahan</h5>
+
+              <!-- Table with stripped rows -->
+              <table class="table table-hover datatable">
+                <thead>
+                <tr>
+                  <th scope="col">Tanggal/Waktu</th>
+                  <th scope="col">Perubahan</th>
+                  <th scope="col">Diubah Oleh</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log, iterationStatus : ${logs}" >
+                  <td th:text="${#temporals.format(log.date, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                  <td th:text="${log.activity}"></td>
+                  <td th:text="${log.assignee}"></td>
+                </tr>
+
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer th:replace="fragments/fragment :: footer" th:remove="tag"></footer>
+  <!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <object th:include="fragments/fragment :: vendor_js" th:remove="tag"></object>
+
+</body>
+
+</html>
