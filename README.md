@@ -6,11 +6,11 @@ Kelompok C05 - HIMANIS <br>
 Dosen:Dr. Panca Oktavia Hadi Putra B.Sc., M.Bus.<br>
 Asisten dosen: Karin Patricia<br>
 Anggota:<br>
-- Faatihah Tharra Sabbih - Project Manager - 1906353851 <br>
-- Athallah Rikza Ihsani - Lead Analyst - 1906353523<br>
-- Ikmal Almuhtadi - Scrum Master - 1906308324<br>
-- Afnadiati Hartatika - Lead Designer - 1906398931<br>
-- Fariz Wahyuzan Dwitilas - Lead Programmer - 1906399511
+- Faatihah Tharra Sabbih - 1906353851 <br>
+- Athallah Rikza Ihsani - 1906353523<br>
+- Ikmal Almuhtadi - 1906308324<br>
+- Afnadiati Hartatika - 1906398931<br>
+- Fariz Wahyuzan Dwitilas - 1906399511
 
 ---
 
